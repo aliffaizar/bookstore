@@ -1,10 +1,8 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -24,31 +22,24 @@ export class BookController {
 
   @Post()
   async createBook(@Body() createBookDto: CreateBookDto) {
-    try {
-      return await this.bookService.createBook(createBookDto);
-    } catch (error: any) {
-      if (error.code === 'ER_NO_DEFAULT_FOR_FIELD') {
-        const { sqlMessage } = error;
-        const field = sqlMessage.split(' ')[1];
-        throw new BadRequestException(`Invalid ${field.replace(/'/g, '')}`);
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+    return await this.bookService.createBook(createBookDto);
   }
 
   @Get(':id')
-  async getBook(@Param() id: number) {
-    return await this.bookService.findOne(id);
+  async getBook(@Param('id') id: number) {
+    return await this.bookService.findOneWithRelations(id);
   }
 
   @Patch(':id')
-  async updateBook(@Param() id: number, @Body() updateBookDto: UpdateBookDto) {
+  async updateBook(
+    @Param('id') id: number,
+    @Body() updateBookDto: UpdateBookDto,
+  ) {
     return await this.bookService.update(id, updateBookDto);
   }
 
   @Delete(':id')
-  async removeBook(@Param() id: number) {
+  async removeBook(@Param('id') id: number) {
     return await this.bookService.remove(id);
   }
 }

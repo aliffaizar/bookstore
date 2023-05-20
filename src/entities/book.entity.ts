@@ -36,21 +36,18 @@ export class Book {
   @ManyToOne(() => Publisher, (publisher) => publisher.books, {
     nullable: false,
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
   publisher: Publisher;
 
   @ManyToOne(() => Author, (author) => author.books, {
     nullable: false,
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
   author: Author;
 
   @ManyToOne(() => Category, (category) => category.books, {
     nullable: false,
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
   category: Category;
 
