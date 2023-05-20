@@ -15,6 +15,8 @@ import { CategoryModule } from './category.module';
 import { AuthorModule } from './author.module';
 import { PublisherModule } from './publisher.module';
 import { validate } from 'src/configs/env.validation';
+import { Order } from 'src/entities/order.entity';
+import { OrderItem } from 'src/entities/order-item.entity';
 
 @Module({
   imports: [
@@ -32,7 +34,8 @@ import { validate } from 'src/configs/env.validation';
         username: configService.get<string>('MYSQL_USER'),
         password: configService.get<string>('MYSQL_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
-        entities: [User, Author, Book, Category, Publisher],
+        entities: [User, Author, Book, Category, Order, OrderItem, Publisher],
+        synchronize: true,
       }),
     }),
     AuthorModule,

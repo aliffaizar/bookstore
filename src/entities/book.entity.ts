@@ -1,7 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Author } from './author.entity';
 import { Category } from './category.entity';
 import { Publisher } from './publisher.entity';
+import { OrderItem } from './order-item.entity';
 
 @Entity()
 export class Book {
@@ -46,4 +53,7 @@ export class Book {
     onUpdate: 'CASCADE',
   })
   category: Category;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.book)
+  orderItems: OrderItem[];
 }
