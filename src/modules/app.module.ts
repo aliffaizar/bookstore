@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { UserModule } from './user.module';
 import { User } from 'src/entities/user.entity';
@@ -13,18 +14,26 @@ import { BookModule } from './book.module';
 import { CategoryModule } from './category.module';
 import { AuthorModule } from './author.module';
 import { PublisherModule } from './publisher.module';
+import { validate } from 'src/configs/env.validation';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      database: 'bookstore',
-      username: 'root',
-      password: 'admin123',
-      entities: [Author, Book, Category, Publisher, User],
-      synchronize: true,
+    ConfigModule.forRoot({ isGlobal: true, validate }),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 100,
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get<string>('MYSQL_HOST'),
+        port: configService.get<number>('MYSQL_PORT'),
+        username: configService.get<string>('MYSQL_USER'),
+        password: configService.get<string>('MYSQL_PASSWORD'),
+        database: configService.get<string>('MYSQL_DATABASE'),
+        entities: [User, Author, Book, Category, Publisher],
+      }),
     }),
     AuthorModule,
     BookModule,
@@ -32,7 +41,7 @@ import { PublisherModule } from './publisher.module';
     PublisherModule,
     UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [AppService, { provide: 'APP_GUARD', useClass: ThrottlerGuard }],
 })
 export class AppModule {}
