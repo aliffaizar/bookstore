@@ -5,6 +5,11 @@ import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { UserModule } from './user.module';
 import { User } from 'src/entities/user.entity';
+import { Author } from 'src/entities/author.entity';
+import { Book } from 'src/entities/book.entity';
+import { Category } from 'src/entities/category.entity';
+import { Publisher } from 'src/entities/publisher.entity';
+import { BookModule } from './book.module';
 
 @Module({
   imports: [
@@ -15,9 +20,10 @@ import { User } from 'src/entities/user.entity';
       database: 'bookstore',
       username: 'root',
       password: 'admin123',
-      entities: [User],
+      entities: [Author, Book, Category, Publisher, User],
       synchronize: true,
     }),
+    BookModule,
     UserModule,
   ],
   controllers: [AppController],
