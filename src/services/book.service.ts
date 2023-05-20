@@ -23,6 +23,9 @@ export class BookService {
 
   async findOne(id: number): Promise<Book> {
     const book = await this.bookRepository.findOne({ where: { id } });
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
     return book;
   }
 

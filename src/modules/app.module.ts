@@ -10,6 +10,9 @@ import { Book } from 'src/entities/book.entity';
 import { Category } from 'src/entities/category.entity';
 import { Publisher } from 'src/entities/publisher.entity';
 import { BookModule } from './book.module';
+import { CategoryModule } from './category.module';
+import { AuthorModule } from './author.module';
+import { PublisherModule } from './publisher.module';
 
 @Module({
   imports: [
@@ -23,7 +26,10 @@ import { BookModule } from './book.module';
       entities: [Author, Book, Category, Publisher, User],
       synchronize: true,
     }),
+    AuthorModule,
     BookModule,
+    CategoryModule,
+    PublisherModule,
     UserModule,
   ],
   controllers: [AppController],
