@@ -21,7 +21,7 @@ export class AuthorController {
   }
 
   @Get(':id')
-  async getAuthor(@Param() id: number) {
+  async getAuthor(@Param('id') id: number) {
     return await this.authorService.findOne(id);
   }
 
@@ -31,12 +31,15 @@ export class AuthorController {
   }
 
   @Patch(':id')
-  async updateAuthor(@Param() id: number, @Body() authorDto: UpdateAuthorDto) {
+  async updateAuthor(
+    @Param('id') id: number,
+    @Body() authorDto: UpdateAuthorDto,
+  ) {
     return await this.authorService.update(id, authorDto);
   }
 
   @Delete(':id')
-  async removeAuthor(@Param() id: number) {
+  async removeAuthor(@Param('id') id: number) {
     return await this.authorService.remove(id);
   }
 }

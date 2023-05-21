@@ -21,7 +21,7 @@ export class PublisherController {
   }
 
   @Get(':id')
-  async getPublisher(@Param() id: number) {
+  async getPublisher(@Param('id') id: number) {
     return await this.publisherServive.findOne(id);
   }
 
@@ -33,13 +33,13 @@ export class PublisherController {
   @Patch(':id')
   async updatePublisher(
     @Body() publisherDto: PublisherDto,
-    @Param() id: number,
+    @Param('id') id: number,
   ) {
     return await this.publisherServive.update(id, publisherDto);
   }
 
   @Delete(':id')
-  async removePublisher(@Param() id: number) {
+  async removePublisher(@Param('id') id: number) {
     return await this.publisherServive.remove(id);
   }
 }

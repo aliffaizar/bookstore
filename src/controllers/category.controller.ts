@@ -26,17 +26,20 @@ export class CategoryController {
   }
 
   @Get(':id')
-  async getCategory(@Param() id: number) {
+  async getCategory(@Param('id') id: number) {
     return await this.categoryService.findOne(id);
   }
 
   @Patch(':id')
-  async updateCategory(@Param() id: number, @Body() categoryDto: CategoryDto) {
+  async updateCategory(
+    @Param('id') id: number,
+    @Body() categoryDto: CategoryDto,
+  ) {
     return await this.categoryService.update(id, categoryDto);
   }
 
   @Delete(':id')
-  async removeCategory(@Param() id: number) {
+  async removeCategory(@Param('id') id: number) {
     return await this.categoryService.remove(id);
   }
 }

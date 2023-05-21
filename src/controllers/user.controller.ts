@@ -26,17 +26,20 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUser(@Param() id: number) {
+  async getUser(@Param('id') id: number) {
     return await this.userService.findOne(id);
   }
 
   @Patch(':id')
-  async updateUser(@Param() id: number, @Body() updateUserDto: UpdateUserDto) {
+  async updateUser(
+    @Param('id') id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return await this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  async removeUser(@Param() id: number) {
+  async removeUser(@Param('id') id: number) {
     return await this.userService.remove(id);
   }
 }
