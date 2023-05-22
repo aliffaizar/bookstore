@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import { IsArray, IsNumber } from 'class-validator';
 
 export class OrderItemDto {
@@ -21,3 +22,5 @@ export class CreateOrderDto {
   @IsArray()
   orderItems: OrderItemDto[];
 }
+
+export class UpdateOrderDto extends PartialType(CreateOrderDto) {}

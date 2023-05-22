@@ -17,6 +17,7 @@ import { PublisherModule } from './publisher.module';
 import { validate } from 'src/configs/env.validation';
 import { Order } from 'src/entities/order.entity';
 import { OrderItem } from 'src/entities/order-item.entity';
+import { OrderModule } from './order.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { OrderItem } from 'src/entities/order-item.entity';
     AuthorModule,
     BookModule,
     CategoryModule,
+    OrderModule,
     PublisherModule,
     UserModule,
   ],
