@@ -7,10 +7,17 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 
 import { CreateUserDto, UpdateUserDto } from 'src/dto/user.dto';
 import { UserService } from 'src/services/user.service';
 
+@ApiTags('Users')
+@ApiBearerAuth()
+@ApiHeader({
+  name: 'Authorization',
+  description: 'Bearer <token>',
+})
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}

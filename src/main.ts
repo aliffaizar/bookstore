@@ -8,14 +8,17 @@ const config = new DocumentBuilder()
   .setTitle('Bookstore API')
   .setDescription('Bookstore API with NestJS')
   .setVersion('1.0')
-
   .setContact('Alif Faizar', 'https://aliffaizar.com', 'aliffaizar21@gmail.com')
   .build();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    include: [],
+    ignoreGlobalPrefix: false,
+  });
 
   SwaggerModule.setup('/', app, document);
   app.useGlobalPipes(new ValidationPipe());
