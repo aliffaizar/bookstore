@@ -31,6 +31,14 @@ class EnvirionmentVariable {
   @IsNotEmpty()
   @IsString()
   MYSQL_DATABASE: string;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_SECRET: string;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_EXPIRES_IN: string;
 }
 
 export function validate(config: Record<string, unknown>) {

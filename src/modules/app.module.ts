@@ -18,6 +18,7 @@ import { validate } from 'src/configs/env.validation';
 import { Order } from 'src/entities/order.entity';
 import { OrderItem } from 'src/entities/order-item.entity';
 import { OrderModule } from './order.module';
+import { AuthModule } from './auth.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { OrderModule } from './order.module';
         synchronize: true,
       }),
     }),
+    AuthModule,
     AuthorModule,
     BookModule,
     CategoryModule,
