@@ -6,10 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
 
 import { CreateOrderDto, UpdateOrderDto } from 'src/dto/order.dto';
+import { JwtGuard } from 'src/guards/jwt.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { OrderService } from 'src/services/order.service';
 
 @ApiTags('Orders')
@@ -28,6 +32,8 @@ export class OrderController {
     description: 'Bearer <token>',
   })
   @Post()
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin', 'user')
   async createOrder(@Body() orderDto: CreateOrderDto) {
     return await this.orderService.createOrder(orderDto);
   }
@@ -43,6 +49,8 @@ export class OrderController {
     description: 'Bearer <token>',
   })
   @Patch(':id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin', 'user')
   async updateOrder(@Param('id') id: number, @Body() orderDto: UpdateOrderDto) {
     return await this.orderService.update(id, orderDto);
   }
@@ -53,6 +61,8 @@ export class OrderController {
     description: 'Bearer <token>',
   })
   @Delete(':id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async removeOrder(@Param('id') id: number) {
     return await this.orderService.remove(id);
   }

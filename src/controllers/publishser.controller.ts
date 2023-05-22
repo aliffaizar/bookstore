@@ -6,10 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
 
 import { PublisherDto } from 'src/dto/publisher.dto';
+import { JwtGuard } from 'src/guards/jwt.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { PublisherService } from 'src/services/publisher.service';
 
 @ApiTags('Publishers')
@@ -33,6 +37,8 @@ export class PublisherController {
     description: 'Bearer <token>',
   })
   @Post()
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async createPublisher(@Body() publisherDto: PublisherDto) {
     return await this.publisherServive.createPublisher(publisherDto);
   }
@@ -43,6 +49,8 @@ export class PublisherController {
     description: 'Bearer <token>',
   })
   @Patch(':id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async updatePublisher(
     @Body() publisherDto: PublisherDto,
     @Param('id') id: number,
@@ -55,6 +63,8 @@ export class PublisherController {
     name: 'Authorization',
     description: 'Bearer <token>',
   })
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   @Delete(':id')
   async removePublisher(@Param('id') id: number) {
     return await this.publisherServive.remove(id);

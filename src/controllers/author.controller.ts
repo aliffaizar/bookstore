@@ -6,11 +6,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 
 import { AuthorService } from 'src/services/author.service';
 import { CreateAuthorDto, UpdateAuthorDto } from 'src/dto/author.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { JwtGuard } from 'src/guards/jwt.guard';
 
 @ApiTags('Authors')
 @Controller('authors')
@@ -33,6 +37,8 @@ export class AuthorController {
     description: 'Bearer <token>',
   })
   @Post()
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async createAuthor(@Body() authorDto: CreateAuthorDto) {
     return await this.authorService.createAuthor(authorDto);
   }
@@ -43,6 +49,8 @@ export class AuthorController {
     description: 'Bearer <token>',
   })
   @Patch(':id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async updateAuthor(
     @Param('id') id: number,
     @Body() authorDto: UpdateAuthorDto,
@@ -56,6 +64,8 @@ export class AuthorController {
     description: 'Bearer <token>',
   })
   @Delete(':id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async removeAuthor(@Param('id') id: number) {
     return await this.authorService.remove(id);
   }

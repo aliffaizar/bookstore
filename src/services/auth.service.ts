@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -46,13 +50,22 @@ export class AuthService {
   async register(userData: RegisterDto): Promise<User> {
     const role = 'user';
     const hashedPassword = await this.hashPassword(userData.password);
-    const user = await this.userRepository.save({
-      ...userData,
-      password: hashedPassword,
-      role,
-    });
-    delete user.password;
-    return user;
+    try {
+      const user = await this.userRepository.save({
+        ...userData,
+        password: hashedPassword,
+        role,
+      });
+
+      delete user.password;
+      return user;
+    } catch (error) {
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new ConflictException('Email already exists');
+      }
+      console.log(error);
+      throw error;
+    }
   }
 
   async login({ email, password }: LoginDto): Promise<UserWithToken> {

@@ -6,10 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
 
 import { CategoryDto } from 'src/dto/category.dto';
+import { JwtGuard } from 'src/guards/jwt.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { CategoryService } from 'src/services/category.service';
 
 @ApiTags('Categories')
@@ -28,6 +32,8 @@ export class CategoryController {
     description: 'Bearer <token>',
   })
   @Post()
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async createCategory(@Body() categoryDto: CategoryDto) {
     return await this.categoryService.createCategory(categoryDto);
   }
@@ -43,6 +49,8 @@ export class CategoryController {
     description: 'Bearer <token>',
   })
   @Patch(':id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async updateCategory(
     @Param('id') id: number,
     @Body() categoryDto: CategoryDto,
@@ -56,6 +64,8 @@ export class CategoryController {
     description: 'Bearer <token>',
   })
   @Delete(':id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
   async removeCategory(@Param('id') id: number) {
     return await this.categoryService.remove(id);
   }
