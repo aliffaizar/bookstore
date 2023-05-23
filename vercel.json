@@ -1,5 +1,4 @@
 {
-  "verion": 2,
   "env": {
     "APP_URL": "@APP_URL",
     "MYSQL_HOST": "@MYSQL_HOST",
