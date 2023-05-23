@@ -35,4 +35,20 @@ export class AuthController {
     await this.authService.resendVerificationEmail(email);
     return { message: 'Verification email sent.' };
   }
+
+  @Post('forgot-password')
+  @Throttle(1, 60)
+  async forgotPassword(@Body() { email }: ResendVerifiCationDto) {
+    await this.authService.forgotPassword(email);
+    return { message: 'Password reset email sent.' };
+  }
+
+  @Post('reset-password/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body() { password }: { password: string },
+  ) {
+    await this.authService.resetPassword(token, password);
+    return { message: 'Password reset successfully.' };
+  }
 }

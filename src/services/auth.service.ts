@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -120,6 +121,36 @@ export class AuthService {
       await this.userRepository.save(user);
       delete user.password;
       return user;
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expired');
+      }
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await this.findUserByEmail(email);
+    if (!user.isVerified) {
+      throw new BadRequestException('Please provide a valid email');
+    }
+    this.eventEmitter.emit('sendResetPasswordEmail', {
+      id: user.id,
+      email: user.email,
+    });
+  }
+
+  async resetPassword(token: string, password: string): Promise<void> {
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      const user = await this.userRepository.findOne({
+        where: { id: payload.id },
+      });
+      if (!user) {
+        throw new UnauthorizedException('Invalid token');
+      }
+      user.password = await this.hashPassword(password);
+      await this.userRepository.save(user);
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         throw new UnauthorizedException('Token expired');

@@ -23,4 +23,16 @@ export class EventService {
       token,
     });
   }
+
+  @OnEvent('sendResetPasswordEmail')
+  async handleSendResetPasswordEmail(payload: {
+    email: string;
+    id: number;
+  }): Promise<void> {
+    const token = await this.jwtService.signAsync(payload, { expiresIn: '1d' });
+    await this.mailService.sendResetPasswordEmail({
+      email: payload.email,
+      token,
+    });
+  }
 }
