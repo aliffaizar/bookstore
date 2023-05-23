@@ -1,25 +1,5 @@
 {
-  "env": {
-    "APP_URL": "@APP_URL",
-    "MYSQL_HOST": "@MYSQL_HOST",
-    "MYSQL_PORT": "@MYSQL_PORT",
-    "MYSQL_USER": "@MYSQL_USER",
-    "MYSQL_PASSWORD": "@MYSQL_PASSWORD",
-
-    "JWT_SECRET": "@JWT_SECRET",
-    "JWT_EXPIRES_IN": "@JWT_EXPIRES_IN",
-
-    "MAIL_HOST": "@MAIL_HOST",
-    "MAIL_PORT": "@MAIL_PORT",
-    "MAIL_USER": "@MAIL_USER",
-    "MAIL_PASSWORD": "@MAIL_PASSWORD",
-
-    "AUTHOR_NAME": "@AUTHOR_NAME",
-    "AUTHOR_EMAIL": "@AUTHOR_EMAIL",
-    "AUTHOR_WEBSITE": "@AUTHOR_WEBSITE"
-  },
-
-  "builds": [
+   "builds": [
     {
       "src": "dist/main.js",
       "use": "@vercel/node"
