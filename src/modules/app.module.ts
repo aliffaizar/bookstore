@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -19,10 +20,12 @@ import { Order } from 'src/entities/order.entity';
 import { OrderItem } from 'src/entities/order-item.entity';
 import { OrderModule } from './order.module';
 import { AuthModule } from './auth.module';
+import { VerifyEmail } from 'src/entities/verify-email.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validate }),
+    EventEmitterModule.forRoot(),
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 100,
@@ -36,7 +39,16 @@ import { AuthModule } from './auth.module';
         username: configService.get<string>('MYSQL_USER'),
         password: configService.get<string>('MYSQL_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
-        entities: [User, Author, Book, Category, Order, OrderItem, Publisher],
+        entities: [
+          User,
+          Author,
+          Book,
+          Category,
+          Order,
+          OrderItem,
+          Publisher,
+          VerifyEmail,
+        ],
         synchronize: true,
       }),
     }),

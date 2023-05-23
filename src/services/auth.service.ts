@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { compare, hash } from 'bcrypt';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { User } from 'src/entities/user.entity';
 import { LoginDto, RegisterDto } from 'src/dto/authentication.dto';
@@ -17,6 +18,7 @@ export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private async hashPassword(password: string): Promise<string> {
@@ -48,15 +50,20 @@ export class AuthService {
   }
 
   async register(userData: RegisterDto): Promise<User> {
-    const role = 'user';
+    const role = 'user'; // prevent user from setting role
+    const isVerified = false; // prevent user from setting isVerified
     const hashedPassword = await this.hashPassword(userData.password);
     try {
       const user = await this.userRepository.save({
         ...userData,
         password: hashedPassword,
         role,
+        isVerified,
       });
-
+      this.eventEmitter.emit('sendVerificationEmail', {
+        id: user.id,
+        email: user.email,
+      });
       delete user.password;
       return user;
     } catch (error) {
@@ -77,6 +84,9 @@ export class AuthService {
     if (!isPasswordValid || !user.isActive) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    if (!user.isActive) {
+      throw new UnauthorizedException('please verify your email');
+    }
     delete user.password;
     const token = await this.signToken({
       id: user.id,
@@ -84,5 +94,30 @@ export class AuthService {
       role: user.role,
     });
     return { ...user, token };
+  }
+
+  async resendVerificationEmail(email: string): Promise<void> {
+    const user = await this.findUserByEmail(email);
+    if (user.isActive) {
+      throw new ConflictException('User already verified');
+    }
+    // send email
+  }
+
+  async verifyUser(token: string): Promise<User> {
+    const payload = await this.jwtService.verifyAsync(token);
+    const user = await this.userRepository.findOne({
+      where: { id: payload.id },
+    });
+    if (!user) {
+      throw new UnauthorizedException('Invalid token');
+    }
+    if (user.isActive) {
+      throw new ConflictException('User already verified');
+    }
+    user.isActive = true;
+    await this.userRepository.save(user);
+    delete user.password;
+    return user;
   }
 }

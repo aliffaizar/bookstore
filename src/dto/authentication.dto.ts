@@ -49,3 +49,14 @@ export class LoginDto {
   @IsString()
   password: string;
 }
+
+export class ResendVerifiCationDto {
+  @ApiProperty({
+    description: 'Email of the user',
+    example: 'johndoe@mail.com',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+}

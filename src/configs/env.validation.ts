@@ -39,6 +39,22 @@ class EnvirionmentVariable {
   @IsNotEmpty()
   @IsString()
   JWT_EXPIRES_IN: string;
+
+  @IsNotEmpty()
+  @IsString()
+  MAIL_HOST: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  MAIL_PORT: number;
+
+  @IsNotEmpty()
+  @IsString()
+  MAIL_USER: string;
+
+  @IsNotEmpty()
+  @IsString()
+  MAIL_PASSWORD: string;
 }
 
 export function validate(config: Record<string, unknown>) {

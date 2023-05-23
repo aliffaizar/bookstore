@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserRole } from '../types/user.type';
 import { Order } from './order.entity';
+import { VerifyEmail } from './verify-email.entity';
 
 @Entity()
 export class User {
@@ -27,6 +28,9 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ nullable: false, default: false })
+  isVerified: boolean;
+
   @Column({
     type: 'enum',
     enum: ['admin', 'superadmin', 'user'],
@@ -36,4 +40,7 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @OneToMany(() => VerifyEmail, (verifyEmail) => verifyEmail.user)
+  verifyEmails: VerifyEmail[];
 }
