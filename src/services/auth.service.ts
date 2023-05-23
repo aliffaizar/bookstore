@@ -84,7 +84,7 @@ export class AuthService {
     if (!isPasswordValid || !user.isActive) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    if (!user.isActive) {
+    if (!user.isVerified) {
       throw new UnauthorizedException('please verify your email');
     }
     delete user.password;
@@ -98,26 +98,33 @@ export class AuthService {
 
   async resendVerificationEmail(email: string): Promise<void> {
     const user = await this.findUserByEmail(email);
-    if (user.isActive) {
+    if (user.isVerified) {
       throw new ConflictException('User already verified');
     }
-    // send email
+    this.eventEmitter.emit('sendVerificationEmail', { id: user.id, email });
   }
 
   async verifyUser(token: string): Promise<User> {
-    const payload = await this.jwtService.verifyAsync(token);
-    const user = await this.userRepository.findOne({
-      where: { id: payload.id },
-    });
-    if (!user) {
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      const user = await this.userRepository.findOne({
+        where: { id: payload.id },
+      });
+      if (!user) {
+        throw new UnauthorizedException('Invalid token');
+      }
+      if (user.isVerified) {
+        throw new ConflictException('User already verified');
+      }
+      user.isVerified = true;
+      await this.userRepository.save(user);
+      delete user.password;
+      return user;
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expired');
+      }
       throw new UnauthorizedException('Invalid token');
     }
-    if (user.isActive) {
-      throw new ConflictException('User already verified');
-    }
-    user.isActive = true;
-    await this.userRepository.save(user);
-    delete user.password;
-    return user;
   }
 }

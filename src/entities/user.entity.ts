@@ -2,7 +2,6 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserRole } from '../types/user.type';
 import { Order } from './order.entity';
-import { VerifyEmail } from './verify-email.entity';
 
 @Entity()
 export class User {
@@ -40,7 +39,4 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
-
-  @OneToMany(() => VerifyEmail, (verifyEmail) => verifyEmail.user)
-  verifyEmails: VerifyEmail[];
 }
