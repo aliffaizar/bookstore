@@ -56,17 +56,6 @@ VALUES
     1
   ),
   (
-    "War and Peace",
-    "War and Peace is a novel by the Russian author Leo Tolstoy, published serially, then in its entirety in 1869. It is regarded as one of Tolstoy's finest literary achievements. The novel chronicles the French invasion of Russia and the impact of the Napoleonic era on Tsarist society through the stories of five Russian aristocratic families. Portions of an earlier version, titled The Year 1805, were serialized in The Russian Messenger from 1865 to 1867, then published in its entirety in 1869. Tolstoy said War and Peace is 'not a novel, even less is it a poem, and still less a historical chronicle'. Large sections, especially in the later chapters, are philosophical discussion rather than narrative. Tolstoy also said that the best Russian literature does not conform to standards and hence hesitated to call War and Peace a novel. Instead, he regarded Anna Karenina as his first true novel.",
-    1225,
-    19.99,
-    1869,
-    "https://images-na.ssl-images-amazon.com/images/I/51Q5ZQ%2BZjSL._SX331_BO1,204,203,200_.jpg",
-    11,
-    4,
-    3
-  ),
-  (
     "The Catcher in the Rye",
     "The Catcher in the Rye is a story by J. D. Salinger, partially published in serial form in 1945–1946 and as a novel in 1951. It was originally intended for adults but is often read by adolescents for its themes of angst, alienation, and as a critique on superficiality in society. It has been translated widely. Around 1 million copies are sold each year, with total sales of more than 65 million books. The novel's protagonist Holden Caulfield has become an icon for teenage rebellion. The novel also deals with complex issues of innocence, identity, belonging, loss, and connection.",
     234,
@@ -88,6 +77,7 @@ VALUES
     6,
     4
   );
+
 
 INSERT INTO user (name, email, password, role)
 VALUES
