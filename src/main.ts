@@ -14,6 +14,7 @@ async function bootstrap() {
     .setTitle('Bookstore API')
     .setDescription('Bookstore API with NestJS')
     .setVersion('1.0')
+    .addBearerAuth()
     .setContact(
       configService.get<string>('AUTHOR_NAME'),
       configService.get<string>('AUTHOR_WEBSITE'),

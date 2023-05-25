@@ -8,7 +8,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  CreatePublisherApi,
+  DeletePublisherApi,
+  GetPublisherApi,
+  GetPublishersApi,
+  UpdatePublisherApi,
+} from 'src/decorators/docs/publisher.api';
 import { Roles } from 'src/decorators/roles.decorator';
 
 import { PublisherDto } from 'src/dto/publisher.dto';
@@ -21,36 +28,30 @@ import { PublisherService } from 'src/services/publisher.service';
 export class PublisherController {
   constructor(private readonly publisherServive: PublisherService) {}
 
+  @GetPublishersApi()
   @Get()
   async getPublishers() {
     return await this.publisherServive.findAll();
   }
 
+  @GetPublisherApi()
   @Get(':id')
   async getPublisher(@Param('id') id: number) {
     return await this.publisherServive.findOne(id);
   }
 
-  @ApiBearerAuth()
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer <token>',
-  })
-  @Post()
   @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin', 'superadmin')
+  @CreatePublisherApi()
+  @Post()
   async createPublisher(@Body() publisherDto: PublisherDto) {
     return await this.publisherServive.createPublisher(publisherDto);
   }
 
-  @ApiBearerAuth()
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer <token>',
-  })
-  @Patch(':id')
   @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin', 'superadmin')
+  @UpdatePublisherApi()
+  @Patch(':id')
   async updatePublisher(
     @Body() publisherDto: PublisherDto,
     @Param('id') id: number,
@@ -58,13 +59,9 @@ export class PublisherController {
     return await this.publisherServive.update(id, publisherDto);
   }
 
-  @ApiBearerAuth()
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer <token>',
-  })
   @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin', 'superadmin')
+  @DeletePublisherApi()
   @Delete(':id')
   async removePublisher(@Param('id') id: number) {
     return await this.publisherServive.remove(id);
