@@ -13,6 +13,8 @@ import { PublisherModule } from './publisher.module';
 import { validate } from 'src/configs/env.validation';
 import { OrderModule } from './order.module';
 import { AuthModule } from './auth.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -34,6 +36,19 @@ import { AuthModule } from './auth.module';
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: 'schema.gql',
+      playground: true,
+      include: [
+        UserModule,
+        BookModule,
+        CategoryModule,
+        AuthorModule,
+        PublisherModule,
+        OrderModule,
+      ],
     }),
     AuthModule,
     AuthorModule,

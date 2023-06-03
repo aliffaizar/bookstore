@@ -1,0 +1,77 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Author {
+  id: Int!
+  name: String!
+  biography: String!
+  books: [Book!]!
+}
+
+type Category {
+  id: Int!
+  name: String!
+  books: [Book!]!
+}
+
+type Publisher {
+  id: Int!
+  name: String!
+  books: [Book!]!
+}
+
+type Book {
+  id: Int!
+  title: String!
+  description: String!
+  pages: Int!
+  price: Int!
+  publishedYear: Int!
+  image: String!
+  publisher: Publisher!
+  author: Author!
+  category: Category!
+  orderItems: [OrderItem!]!
+}
+
+type OrderItem {
+  id: Int!
+  quantity: Int!
+  price: Float!
+  book: Book!
+  order: Order!
+}
+
+type Order {
+  id: Int!
+  total: Float!
+  orderDate: DateTime!
+  user: User!
+  orderItems: [OrderItem!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  isActive: Boolean!
+  isVerified: Boolean!
+  role: String!
+  orders: [Order!]!
+}
+
+type Query {
+  users: [User!]!
+  publishers: [Publisher!]!
+  orders: [Order!]!
+  categories: [Category!]!
+  books: [Book!]!
+  authors: [Author!]!
+}
