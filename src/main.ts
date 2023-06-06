@@ -1,3 +1,4 @@
+import { createServer } from 'http';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 
@@ -29,6 +30,16 @@ async function bootstrap() {
   SwaggerModule.setup('/', app, document);
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(port);
+  await app.init();
+  const server = createServer((req, res) =>
+    app.getHttpServer().emit('request', req, res),
+  );
+  if (process.env.NODE_ENV === 'development') {
+    server.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+  } else {
+    server.listen();
+  }
 }
 bootstrap();
